@@ -2216,6 +2216,18 @@ class ActionEnum:
         ],
     )
 
+    MONGODB_ROLLING_RELOAD = ActionMeta(
+        id="mongodb_rolling_reload",
+        name=_("MongoDB 滚动重启"),
+        name_en="mongodb_rolling_reload",
+        type="execute",
+        related_actions=[DB_MANAGE.id],
+        related_resource_types=[ResourceEnum.MONGODB],
+        group=_("MongoDB"),
+        subgroup=_("集群维护"),
+        common_labels=[CommonActionLabel.BIZ_MAINTAIN, CommonActionLabel.DEVELOPER],
+    )
+
     MONGODB_DATA_EXPORT = ActionMeta(
         id=TicketType.MONGODB_DATA_EXPORT.lower(),
         subgroup=_("数据处理"),

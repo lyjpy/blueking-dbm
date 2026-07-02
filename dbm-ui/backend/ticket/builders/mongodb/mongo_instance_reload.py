@@ -17,6 +17,7 @@ from rest_framework import serializers
 
 from backend.db_meta.models import StorageInstance
 from backend.flow.engine.controller.mongodb import MongoDBController
+from backend.iam_app.dataclass.actions import ActionEnum
 from backend.ticket import builders
 from backend.ticket.builders.common.constants import OperaObjType
 from backend.ticket.builders.mongodb.base import BaseMongoDBOperateDetailSerializer, BaseMongoDBTicketFlowBuilder
@@ -143,9 +144,9 @@ class MongoDBInstanceReloadFlowParamBuilder(builders.FlowParamBuilder):
             info.pop("port", None)
 
 
-@builders.BuilderFactory.register(TicketType.MONGODB_INSTANCE_RELOAD)
+@builders.BuilderFactory.register(TicketType.MONGODB_INSTANCE_RELOAD, iam=ActionEnum.MONGODB_ROLLING_RELOAD)
 class MongoDBInstanceReloadApplyFlowBuilder(BaseMongoDBTicketFlowBuilder):
     serializer = MongoDBInstanceReloadDetailSerializer
     inner_flow_builder = MongoDBInstanceReloadFlowParamBuilder
-    inner_flow_name = _("MongoDB 实例重启")
+    inner_flow_name = _("MongoDB 滚动重启")
     need_patch_instance_details = True
