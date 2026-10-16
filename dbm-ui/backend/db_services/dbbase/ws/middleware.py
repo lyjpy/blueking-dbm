@@ -110,8 +110,17 @@ class DBMWebSocketOriginValidator(object):
         self.origin_validator = OriginValidator(inner, allowed_origins)
 
     async def __call__(self, scope, receive, send):
-        if scope.get("bkapi_jwt_verified") and not _get_header(scope, "origin"):
+        origin = _get_header(scope, "origin")
+        if scope.get("bkapi_jwt_verified") and not origin:
             return await self.inner(scope, receive, send)
+        if origin:
+            try:
+                # 在 Channels 匹配来源前，读取 port 属性以校验端口格式和范围。
+                parsed_origin = urlparse(origin)
+                _ = parsed_origin.port
+            except ValueError:
+                await send({"type": "websocket.close"})
+                return
         return await self.origin_validator(scope, receive, send)
 
 
